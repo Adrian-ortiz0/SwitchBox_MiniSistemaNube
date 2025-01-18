@@ -137,6 +137,10 @@ public class CarpetasUI {
                 System.out.println("No hay carpetas creadas!");
                 System.out.println("Se procedera a guardar la carpeta en la raiz automaticamente!");
                 System.out.println();
+                carpeta.setNombre(nombre);
+                carpeta.setTamaño(0);
+                carpeta.setSubCarpetas(new ArrayList<>());
+                carpeta.setUsuario(usuario);
                 carpetaService.save(carpeta);
                 System.out.println("Carpeta creada con exito!");
 
