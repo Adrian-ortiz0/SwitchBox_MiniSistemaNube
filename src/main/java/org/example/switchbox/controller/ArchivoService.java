@@ -1,8 +1,10 @@
 package org.example.switchbox.controller;
 
 import org.example.switchbox.models.entities.Archivo;
+import org.example.switchbox.models.entities.ArchivoCarpeta;
 import org.example.switchbox.models.entities.CompartirArchivo;
 import org.example.switchbox.models.entities.Usuario;
+import org.example.switchbox.models.repositories.ArchivoCarpetaRepository;
 import org.example.switchbox.models.repositories.ArchivoRepository;
 import org.example.switchbox.models.repositories.CompartirArchivoRepository;
 import org.example.switchbox.models.repositories.UsuarioRepository;
@@ -23,6 +25,9 @@ public class ArchivoService {
 
     @Autowired
     private CompartirArchivoRepository compartirArchivoRepository;
+
+    @Autowired
+    private ArchivoCarpetaRepository archivoCarpetaRepository;
 
     public List<Archivo> findAll() {
         return archivoRepository.findAll();
@@ -60,6 +65,11 @@ public class ArchivoService {
     public Archivo obtenerArchivoPorNombre(String nombreArchivo) {
         Optional<Archivo> archivoOpt = archivoRepository.findByNombre(nombreArchivo);
         return archivoOpt.orElseThrow(() -> new RuntimeException("Archivo no encontrado"));
+    }
+
+    public ArchivoCarpeta save(ArchivoCarpeta archivoCarpeta) {
+        return archivoCarpetaRepository.save(archivoCarpeta);
+
     }
 
 }

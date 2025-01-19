@@ -7,4 +7,5 @@ import java.util.Optional;
 
 public interface ArchivoCarpetaRepository extends JpaRepository<ArchivoCarpeta, Long> {
 
+
 }

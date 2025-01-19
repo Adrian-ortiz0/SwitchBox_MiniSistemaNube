@@ -1,12 +1,10 @@
 package org.example.switchbox.views;
 
 import org.example.switchbox.controller.ArchivoService;
+import org.example.switchbox.controller.CarpetaService;
 import org.example.switchbox.controller.CuentaService;
 import org.example.switchbox.controller.UsuarioService;
-import org.example.switchbox.models.entities.Archivo;
-import org.example.switchbox.models.entities.CompartirArchivo;
-import org.example.switchbox.models.entities.TipoArchivo;
-import org.example.switchbox.models.entities.Usuario;
+import org.example.switchbox.models.entities.*;
 import org.example.switchbox.models.repositories.ArchivoRepository;
 import org.example.switchbox.models.repositories.CuentaRepository;
 import org.example.switchbox.models.repositories.UsuarioRepository;
@@ -27,6 +25,9 @@ public class ArchivosUI {
 
     @Autowired
     private ArchivoService archivoService;
+
+    @Autowired
+    private CarpetaService carpetaService;
 
     @Autowired
     private UsuarioService usuarioService;
@@ -55,6 +56,7 @@ public class ArchivosUI {
             System.out.println("5. Editar un archivo");
             System.out.println("6. Ver Archivos compartidos");
             System.out.println("7. Buscar archivo por nombre");
+            System.out.println("8. Meter archivos en carpetas");
             System.out.println("0. Salir");
 
             try {
@@ -76,12 +78,57 @@ public class ArchivosUI {
                     listarArchivosCompartidos(usuario);
                 } else if (input == 7) {
                     buscarArchivoPorNombre(usuario);
+                } else if (input == 8) {
+                    meterArchivosEnCarpetas(usuario);
                 } else {
                     System.out.println("Opcion no valida");
                 }
             } catch (NumberFormatException e) {
                 System.out.println("Introduzca un valor valido");
                 continue;
+            }
+        }
+    }
+
+    public void meterArchivosEnCarpetas(Usuario usuario) {
+        while (true) {
+            List<Archivo> listaArchivos = archivoService.getArchivos(usuario.getId());
+            System.out.println("Selecciona el archivo que deseas trasladar");
+            if (listaArchivos.isEmpty()) {
+                System.out.println("El archivo no existe");
+                return;
+            } else {
+                for (int i = 0; i < listaArchivos.size(); i++) {
+                    Archivo archivo = listaArchivos.get(i);
+                    System.out.println((i + 1) + ". " + archivo.getNombre() + "| Tamaño: " + archivo.getTamaño());
+                }
+                int archivoEleccion = Integer.parseInt(scanner.nextLine());
+                Archivo archivoElegido = listaArchivos.get(archivoEleccion - 1);
+
+                List<Carpeta> listaCarpetas = carpetaService.findCarpetasByUsuario(usuario);
+                System.out.println("Selecciona la carpeta a la que deseas trasladar");
+                if (listaCarpetas.isEmpty()) {
+                    System.out.println("No hay carpetas para trasladar el archivo");
+                    System.out.println("Saliendo...");
+                    break;
+                } else {
+                    for (int i = 0; i < listaCarpetas.size(); i++) {
+                        Carpeta carpeta = listaCarpetas.get(i);
+                        System.out.println((i + 1) + ". " + carpeta.getNombre());
+                    }
+                    int carpetaEleccion = Integer.parseInt(scanner.nextLine());
+                    Carpeta carpetaElegida = listaCarpetas.get(carpetaEleccion - 1);
+
+                    ArchivoCarpeta archivoCarpeta = new ArchivoCarpeta();
+                    archivoCarpeta.setCarpeta(carpetaElegida);
+                    archivoCarpeta.setArchivo(archivoElegido);
+                    if (archivoService.save(archivoCarpeta) == null) {
+                        System.out.println("Error");
+                    } else {
+                        System.out.println("Archivo movido con exito!");
+                        break;
+                    }
+                }
             }
         }
     }
