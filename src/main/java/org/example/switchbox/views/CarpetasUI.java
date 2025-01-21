@@ -30,6 +30,7 @@ public class CarpetasUI {
             System.out.println("2. Eliminar carpeta");
             System.out.println("3. Editar nombre");
             System.out.println("4. Mostrar las carpetas");
+            System.out.println("5. Mostrar contenido de carpeta");
             System.out.println("0. Salir");
 
             try {
