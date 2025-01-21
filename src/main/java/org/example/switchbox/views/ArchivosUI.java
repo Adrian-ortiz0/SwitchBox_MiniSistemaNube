@@ -95,20 +95,30 @@ public class ArchivosUI {
             List<Archivo> listaArchivos = archivoService.getArchivos(usuario.getId());
             System.out.println("Selecciona el archivo que deseas trasladar");
             if (listaArchivos.isEmpty()) {
-                System.out.println("El archivo no existe");
+                System.out.println("No hay archivos disponibles.");
                 return;
             } else {
                 for (int i = 0; i < listaArchivos.size(); i++) {
                     Archivo archivo = listaArchivos.get(i);
-                    System.out.println((i + 1) + ". " + archivo.getNombre() + "| Tamaño: " + archivo.getTamaño());
+                    System.out.println((i + 1) + ". " + archivo.getNombre() + " | Tamaño: " + archivo.getTamaño());
                 }
-                int archivoEleccion = Integer.parseInt(scanner.nextLine());
+                int archivoEleccion;
+                try {
+                    archivoEleccion = Integer.parseInt(scanner.nextLine());
+                    if (archivoEleccion < 1 || archivoEleccion > listaArchivos.size()) {
+                        System.out.println("Opción fuera de rango. Intenta nuevamente.");
+                        continue;
+                    }
+                } catch (NumberFormatException e) {
+                    System.out.println("Entrada no válida. Por favor, introduce un número.");
+                    continue;
+                }
                 Archivo archivoElegido = listaArchivos.get(archivoEleccion - 1);
 
                 List<Carpeta> listaCarpetas = carpetaService.findCarpetasByUsuario(usuario);
                 System.out.println("Selecciona la carpeta a la que deseas trasladar");
                 if (listaCarpetas.isEmpty()) {
-                    System.out.println("No hay carpetas para trasladar el archivo");
+                    System.out.println("No hay carpetas para trasladar el archivo.");
                     System.out.println("Saliendo...");
                     break;
                 } else {
@@ -116,17 +126,46 @@ public class ArchivosUI {
                         Carpeta carpeta = listaCarpetas.get(i);
                         System.out.println((i + 1) + ". " + carpeta.getNombre());
                     }
-                    int carpetaEleccion = Integer.parseInt(scanner.nextLine());
+                    int carpetaEleccion;
+                    try {
+                        carpetaEleccion = Integer.parseInt(scanner.nextLine());
+                        if (carpetaEleccion < 1 || carpetaEleccion > listaCarpetas.size()) {
+                            System.out.println("Opción fuera de rango. Intenta nuevamente.");
+                            continue;
+                        }
+                    } catch (NumberFormatException e) {
+                        System.out.println("Entrada no válida. Por favor, introduce un número.");
+                        continue;
+                    }
                     Carpeta carpetaElegida = listaCarpetas.get(carpetaEleccion - 1);
 
                     ArchivoCarpeta archivoCarpeta = new ArchivoCarpeta();
                     archivoCarpeta.setCarpeta(carpetaElegida);
                     archivoCarpeta.setArchivo(archivoElegido);
+
                     if (archivoService.save(archivoCarpeta) == null) {
-                        System.out.println("Error");
+                        System.out.println("Ocurrió un error al trasladar el archivo. Intenta nuevamente.");
                     } else {
-                        System.out.println("Archivo movido con exito!");
-                        break;
+                        System.out.println("¡Archivo movido con éxito!");
+                        System.out.println();
+                        System.out.println("¿Deseas trasladar otro archivo?");
+                        System.out.println("1. Sí");
+                        System.out.println("2. No");
+
+                        int decision;
+                        try {
+                            decision = Integer.parseInt(scanner.nextLine());
+                            if (decision == 2) {
+                                System.out.println("Saliendo...");
+                                break;
+                            } else if (decision == 1) {
+                                System.out.println("Regresando al menú para trasladar otro archivo...");
+                            } else {
+                                System.out.println("Opción no válida. Por favor, intenta nuevamente.");
+                            }
+                        } catch (NumberFormatException e) {
+                            System.out.println("Entrada no válida. Por favor, introduce un número (1 o 2).");
+                        }
                     }
                 }
             }
