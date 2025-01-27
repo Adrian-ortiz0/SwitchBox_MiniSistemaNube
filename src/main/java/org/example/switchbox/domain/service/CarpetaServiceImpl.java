@@ -3,7 +3,6 @@ package org.example.switchbox.domain.service;
 import org.example.switchbox.domain.repository.CarpetaRepository;
 import org.example.switchbox.domain.repository.UsuarioRepository;
 import org.example.switchbox.persistence.entity.Carpeta;
-import org.example.switchbox.persistence.entity.Media;
 import org.example.switchbox.persistence.entity.Usuario;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

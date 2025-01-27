@@ -1,8 +1,6 @@
 package org.example.switchbox.domain.service;
 
 import org.example.switchbox.persistence.entity.Carpeta;
-import org.example.switchbox.persistence.entity.Media;
-import org.example.switchbox.persistence.entity.Usuario;
 
 import java.util.List;
 

@@ -1,9 +1,7 @@
 package org.example.switchbox.web.controller;
 
 import org.example.switchbox.domain.service.CarpetaService;
-import org.example.switchbox.persistence.entity.Archivo;
 import org.example.switchbox.persistence.entity.Carpeta;
-import org.example.switchbox.persistence.entity.Media;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

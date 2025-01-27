@@ -7,7 +7,7 @@ import java.time.LocalDate;
 
 @Entity
 @Table(name = "archivos")
-public class Archivo extends Media {
+public class Archivo {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

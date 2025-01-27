@@ -2,7 +2,6 @@ package org.example.switchbox.domain.repository;
 
 import jakarta.transaction.Transactional;
 import org.example.switchbox.persistence.entity.Archivo;
-import org.example.switchbox.persistence.entity.Media;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

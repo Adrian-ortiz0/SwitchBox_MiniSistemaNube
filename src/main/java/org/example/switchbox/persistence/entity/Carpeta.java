@@ -9,7 +9,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "carpetas")
-public class Carpeta extends Media {
+public class Carpeta {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

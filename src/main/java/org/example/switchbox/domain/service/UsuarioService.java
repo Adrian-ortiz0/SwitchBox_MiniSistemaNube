@@ -17,5 +17,6 @@ public interface UsuarioService {
 
     void updateEspacio(Long espacio, Long id);
 
+    boolean emailExists(String email);
 
 }

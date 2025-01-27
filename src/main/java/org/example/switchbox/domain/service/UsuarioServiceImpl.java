@@ -1,9 +1,12 @@
 package org.example.switchbox.domain.service;
 
+import org.example.switchbox.domain.repository.CuentaRepository;
 import org.example.switchbox.persistence.entity.Cuenta;
+import org.example.switchbox.persistence.entity.RegisterUser;
 import org.example.switchbox.persistence.entity.Usuario;
 import org.example.switchbox.domain.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -46,6 +49,15 @@ public class UsuarioServiceImpl implements UsuarioService {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
+
+    @Autowired
+    private CuentaRepository cuentaRepository;
+
+    private final PasswordEncoder passwordEncoder;
+
+    public UsuarioServiceImpl(PasswordEncoder passwordEncoder) {
+        this.passwordEncoder = passwordEncoder;
+    }
 
     @Autowired
     private CuentaServiceImpl cuentaServiceImpl;
@@ -104,6 +116,33 @@ public class UsuarioServiceImpl implements UsuarioService {
 
     public Usuario getUsuarioByEmail(String email) {
         return usuarioRepository.findByEmail(email);
+    }
+
+    public Usuario registrar(RegisterUser registerUser) {
+        Cuenta cuenta = cuentaRepository.findById(registerUser.getCuentaId())
+                .orElseThrow(() -> new IllegalArgumentException("Cuenta no encontrada con ID: " + registerUser.getCuentaId()));
+
+        Usuario usuario = new Usuario();
+        usuario.setNombre(registerUser.getNombre());
+        usuario.setApellido(registerUser.getApellido());
+        usuario.setEmail(registerUser.getEmail());
+        usuario.setPassword(passwordEncoder.encode(registerUser.getPassword()));
+        usuario.setEspacioUsado(registerUser.getEspacioUsado());
+        usuario.setCuenta(cuenta);
+
+        return usuarioRepository.save(usuario);
+    }
+
+    public boolean verificarPorCorreo(String correo, String password) {
+        Usuario usuario = getUsuarioByEmail(correo);
+        if (usuario == null) {
+            return false;
+        }
+        return passwordEncoder.matches(password, usuario.getPassword());
+    }
+
+    public boolean emailExists(String email) {
+        return usuarioRepository.findByEmail(email) != null;
     }
 
 

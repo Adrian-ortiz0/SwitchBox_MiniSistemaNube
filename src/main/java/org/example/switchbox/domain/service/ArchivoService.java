@@ -1,7 +1,6 @@
 package org.example.switchbox.domain.service;
 
 import org.example.switchbox.persistence.entity.Archivo;
-import org.example.switchbox.persistence.entity.Media;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
