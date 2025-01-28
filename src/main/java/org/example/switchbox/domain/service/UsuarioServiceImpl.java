@@ -27,7 +27,9 @@ public class UsuarioServiceImpl implements UsuarioService {
 
     @Override
     public void delete(long id) {
-
+        Usuario usuario = usuarioRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado para este id :: " + id));
+        usuarioRepository.delete(usuario);
     }
 
     @Override
@@ -45,7 +47,6 @@ public class UsuarioServiceImpl implements UsuarioService {
 
         return usuarioRepository.save(usuario);
     }
-
 
     @Autowired
     private UsuarioRepository usuarioRepository;
@@ -75,31 +76,49 @@ public class UsuarioServiceImpl implements UsuarioService {
     }
 
     public void actualizarPassword(long id, String password) {
-        usuarioRepository.updatePassword(id, password);
-        System.out.println("Usuario actualizado con exito!");
+        Usuario usuario = findById(id);
+        usuario.setPassword(passwordEncoder.encode(password));
+        usuarioRepository.save(usuario);
+        System.out.println("Usuario actualizado con éxito!");
     }
 
     public Usuario findByEmailAndPassword(String email, String password) {
-        return usuarioRepository.findByEmailAndPassword(email, password);
+        Usuario usuario = usuarioRepository.findByEmail(email);
+        if (usuario != null && passwordEncoder.matches(password, usuario.getPassword())) {
+            return usuario;
+        }
+        return null;
     }
 
     public void actualizarNombreYApellido(Long id, String nombre, String apellido) {
-        usuarioRepository.updateNombreAndApellido(id, nombre, apellido);
-        System.out.println("Usuario actualizado con exito!");
+        Usuario usuario = findById(id);
+        usuario.setNombre(nombre);
+        usuario.setApellido(apellido);
+        usuarioRepository.save(usuario);
+        System.out.println("Usuario actualizado con éxito!");
     }
 
     public void actualizarCorreo(Long id, String correo) {
-        usuarioRepository.updateEmail(id, correo);
-        System.out.println("Usuario actualizado con exito!");
+        Usuario usuario = findById(id);
+        usuario.setEmail(correo);
+        usuarioRepository.save(usuario);
+        System.out.println("Usuario actualizado con éxito!");
     }
 
     public void actualizarCuenta(Long id, Cuenta cuenta) {
-        usuarioRepository.updateCuenta(id, cuenta);
-        System.out.println("Cuenta actualizada con exito!");
+        Usuario usuario = findById(id);
+        usuario.setCuenta(cuenta);
+        usuarioRepository.save(usuario);
+        System.out.println("Cuenta actualizada con éxito!");
     }
 
     public void deleteByPassword(String password) {
-        usuarioRepository.deleteByPassword(password);
+        Usuario usuario = usuarioRepository.findByPassword(password);
+        if (usuario != null) {
+            usuarioRepository.delete(usuario);
+        } else {
+            throw new RuntimeException("Usuario con contraseña especificada no encontrado.");
+        }
     }
 
     public void updateEspacio(Long espacio, Long id) {
@@ -109,9 +128,9 @@ public class UsuarioServiceImpl implements UsuarioService {
         usuarioRepository.save(usuario);
     }
 
-
     public long getEspacio(long id) {
-        return usuarioRepository.getEspacioById(id);
+        Usuario usuario = findById(id);
+        return usuario.getEspacioUsado();
     }
 
     public Usuario getUsuarioByEmail(String email) {
@@ -149,6 +168,4 @@ public class UsuarioServiceImpl implements UsuarioService {
     public Usuario findByEmail(String email) {
         return usuarioRepository.findByEmail(email);
     }
-
-
 }

@@ -1,5 +1,6 @@
 package org.example.switchbox.domain.service;
 
+import org.example.switchbox.persistence.entity.RegisterUser;
 import org.example.switchbox.persistence.entity.Usuario;
 
 import java.util.List;
@@ -20,5 +21,7 @@ public interface UsuarioService {
     boolean emailExists(String email);
 
     Usuario findByEmail(String email);
+
+    Usuario registrar(RegisterUser registerUser);
 
 }
