@@ -19,4 +19,6 @@ public interface UsuarioService {
 
     boolean emailExists(String email);
 
+    Usuario findByEmail(String email);
+
 }

@@ -1,5 +1,7 @@
 package org.example.switchbox.web.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
+import org.example.switchbox.domain.security.JWTAuthtenticationConfig;
 import org.example.switchbox.domain.service.UsuarioService;
 import org.example.switchbox.persistence.entity.Usuario;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +16,8 @@ public class UsuarioController {
 
     @Autowired
     private final UsuarioService usuarioService;
+    @Autowired
+    private JWTAuthtenticationConfig jWTAuthtenticationConfig;
 
 
     public UsuarioController(UsuarioService usuarioService) {
@@ -44,6 +48,10 @@ public class UsuarioController {
     @DeleteMapping("/{id}")
     public void deleteUsuario(@PathVariable long id) {
         usuarioService.delete(id);
+    }
+
+    public Usuario getUsuarioByEmail(String email) {
+        return usuarioService.findByEmail(email);
     }
 
     @PutMapping("/archivos/{id}")
