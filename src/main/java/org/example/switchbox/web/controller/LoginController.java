@@ -31,10 +31,8 @@ public class LoginController {
         if (usuarioService.verificarPorCorreo(email, password)) {
             String token = jwtAuthtenticationConfig.getJWTToken(email);
 
-            // Obtener los detalles del usuario
             Usuario usuario = usuarioService.findByEmail(email);
 
-            // Crear una respuesta que contenga el token y los detalles del usuario
             Map<String, Object> response = new HashMap<>();
             response.put("token", token);
             response.put("user", usuario);
